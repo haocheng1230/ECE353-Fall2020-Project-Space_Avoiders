@@ -23,5 +23,11 @@
 .\obj\main.o: ..\drivers\include\timers.h
 .\obj\main.o: hw3_images.h
 .\obj\main.o: hw3_staff.h
+.\obj\main.o: hw3_images.h
 .\obj\main.o: hw3.h
+.\obj\main.o: hw3_images.h
 .\obj\main.o: hw3_interrupts.h
+.\obj\main.o: hw3_images.h
+.\obj\main.o: ..\peripherals\include\serial_debug.h
+.\obj\main.o: ..\drivers\include\pc_buffer.h
+.\obj\main.o: ..\drivers\include\uart.h

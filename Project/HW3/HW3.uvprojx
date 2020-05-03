@@ -427,6 +427,16 @@
               <FileType>1</FileType>
               <FilePath>..\drivers\c\adc.c</FilePath>
             </File>
+            <File>
+              <FileName>pc_buffer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\drivers\c\pc_buffer.c</FilePath>
+            </File>
+            <File>
+              <FileName>uart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\drivers\c\uart.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -441,6 +451,11 @@
               <FileName>ps2-new.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\ps2-new.c</FilePath>
+            </File>
+            <File>
+              <FileName>serial_debug.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\peripherals\c\serial_debug.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -13,13 +13,18 @@
 #include "timers.h"
 #include "hw3_images.h"
 
-extern volatile uint16_t SHIP_X_COORD;
-extern volatile uint16_t SHIP_Y_COORD;
 extern volatile uint16_t INVADER_X_COORD;
 extern volatile uint16_t INVADER_Y_COORD;
-extern volatile bool ALERT_SPACE_SHIP;
+extern volatile uint16_t FIGHTER_X_COORD;
+extern volatile uint16_t FIGHTER_Y_COORD;
 extern volatile bool ALERT_INVADER;
+extern volatile bool ALERT_FIGHTER;
+extern volatile bool ALERT_BULLET;
 extern char STUDENT_NAME[];
+
+
+
+#define BULLET_NUM 8
 
 typedef enum{
   PS2_DIR_UP,
@@ -30,6 +35,17 @@ typedef enum{
   PS2_DIR_INIT,
 } PS2_DIR_t;
 
+typedef struct bullet
+{
+    const uint8_t* map;
+    uint16_t x;
+    uint16_t y;
+    uint16_t xSpeed;
+    uint16_t ySpeed;
+    uint16_t color;
+    bool draw;
+
+} bullet;
 
 //*****************************************************************************
 // Determines if any part of the image would be off the screen if the image

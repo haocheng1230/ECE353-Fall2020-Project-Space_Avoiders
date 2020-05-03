@@ -19,3 +19,7 @@ extern const uint8_t touchToStartBitmaps[];
 #define touchToStartWidthPixels 79
 #define touchToStartHeightPixels 12
 #endif
+// Bitmap info for invader
+extern const uint8_t invaderBitmaps[];
+extern const uint8_t invaderWidthPixels;
+extern const uint8_t invaderHeightPixels;

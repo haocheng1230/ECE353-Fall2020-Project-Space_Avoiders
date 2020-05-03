@@ -38,6 +38,9 @@
 #include "hw3.h"
 #include "hw3_interrupts.h"
 
+#include "driver_defines.h"
+#include "serial_debug.h"
+
 extern void initialize_serial_debug(void);
 extern void put_string(char *data);
 

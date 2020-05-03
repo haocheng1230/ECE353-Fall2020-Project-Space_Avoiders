@@ -1,24 +1,20 @@
 #include "hw3.h"
+#include "main.h"
 #define LCD_X_MAX 239 // 0-239
 #define LCD_Y_MAX 319 // 0-319
-volatile uint16_t SHIP_X_COORD = 190;
-volatile uint16_t SHIP_Y_COORD = 270;
+//extern bool game_start = false;
+bool game_start = true;
+volatile uint16_t FIGHTER_X_COORD = 190;
+volatile uint16_t FIGHTER_Y_COORD = 270;
+
 volatile uint16_t INVADER_X_COORD = 50;
 volatile uint16_t INVADER_Y_COORD = 40;
-volatile bool ALERT_SPACE_SHIP = true;
-volatile bool ALERT_INVADER = true;
+
 char STUDENT_NAME[] = "Shuai Zhang & Haocheng Chen";
-
-
-typedef struct
-{
-    int top;
-    int bottom;
-    int left;
-    int right;
-} Rectangle;
-
-
+extern volatile bullet bullets[BULLET_NUM];
+volatile bool ALERT_BULLET = true;
+volatile bool ALERT_FIGHTER = true;
+volatile bool ALERT_INVADER = true;
 //*****************************************************************************
 // Determines if any part of the image would be off the screen if the image
 // is moved in the specified direction.
@@ -148,9 +144,10 @@ void init_hardware(void)
   ps2_initialize();
   
   // Update the Space Shipt 60 times per second.
-  gp_timer_config_32(TIMER2_BASE,TIMER_TAMR_TAMR_PERIOD, 1000000, false, true);
-  gp_timer_config_32(TIMER3_BASE,TIMER_TAMR_TAMR_PERIOD, 500000, false, true);
-  gp_timer_config_32(TIMER4_BASE,TIMER_TAMR_TAMR_PERIOD, 50000, false, true);
+  gp_timer_config_32(TIMER2_BASE,TIMER_TAMR_TAMR_PERIOD, 610000, false, true);
+  gp_timer_config_32(TIMER3_BASE,TIMER_TAMR_TAMR_PERIOD, 770000, false, true);
+  gp_timer_config_32(TIMER4_BASE,TIMER_TAMR_TAMR_PERIOD, 53000, false, true);
+	gp_timer_config_32(TIMER5_BASE,TIMER_TAMR_TAMR_PERIOD, 1400000, false, true);
 }
 
 //*****************************************************************************
@@ -159,38 +156,85 @@ void init_hardware(void)
 void hw3_main(void)
 {
     bool game_over = false;
+    int i = 0;
     init_hardware();
-   
 
-      while(!game_over)
-      {
-          if(ALERT_SPACE_SHIP)
-          {
-            ALERT_SPACE_SHIP = false;
-            
-            lcd_draw_image(
-                          SHIP_X_COORD,                       // X Center Point
-                          space_shipWidthPixels,   // Image Horizontal Width
-                          SHIP_Y_COORD,                       // Y Center Point
-                          space_shipHeightPixels,  // Image Vertical Height
-                          space_shipBitmaps,       // Image
-                          LCD_COLOR_BLUE,           // Foreground Color
-                          LCD_COLOR_BLACK          // Background Color
-                        );
 
-            game_over = check_game_over(
-                                        SHIP_X_COORD,
-                                        SHIP_Y_COORD,
-                                        space_shipHeightPixels,
-                                        space_shipWidthPixels,
+    while(!game_start){} // wait until touch the screen to start game
+    while(!game_over) {
+			  int width = 0;
+			
+			
+			
+				if (ALERT_BULLET) {
+					ALERT_BULLET = false;
+					//put_string("a");
+		for (i = 0 ; i < BULLET_NUM ; i++) {
+            if (bullets[i].draw == true) {
+                if (bullets[i].map == bulletBitmaps) {
+                    width = 5; 
+                } else {
+                    width = 12;
+                }
+                lcd_draw_image(
+                    bullets[i].x,
+                    width,
+                    bullets[i].y,
+                    12,
+                    bullets[i].map,
+                    bullets[i].color,
+									  LCD_COLOR_BLACK
+                );
+            }
+						
+            game_over = check_game_over(FIGHTER_X_COORD,FIGHTER_Y_COORD,fighterHeightPixel,fighterWidthPixel,
+            bullets[i].x,bullets[i].y,width,12);
+						if(game_over) {
+							break;
+						}
+        }
+				}
+				
+		
+	if(game_over) {
+							break;
+		}		
+				
+				
+	 game_over = check_game_over(
+                                        FIGHTER_X_COORD,
+                                        FIGHTER_Y_COORD,
+                                        fighterHeightPixel,
+                                        fighterWidthPixel,
                                         INVADER_X_COORD,
                                         INVADER_Y_COORD,
                                         invaderHeightPixels,
                                         invaderWidthPixels
-                                    );
-          }
-          
-          if(ALERT_INVADER)
+                                    );		
+				
+				if(game_over) {
+							break;
+		}		
+				
+			if(ALERT_FIGHTER)
+           {
+             ALERT_FIGHTER = false;
+            
+             lcd_draw_image(
+                           FIGHTER_X_COORD,          // X Center Point
+                           fighterWidthPixel,       // Image Horizontal Width
+                           FIGHTER_Y_COORD,          // Y Center Point
+                           fighterHeightPixel,      // Image Vertical Height
+                           fighterBitmaps,           // Image
+                           LCD_COLOR_RED,            // Foreground Color
+                           LCD_COLOR_BLACK           // Background Color
+                        );
+              
+           }
+				
+				
+					 
+				 if(ALERT_INVADER)
           {
             ALERT_INVADER = false;
             
@@ -203,18 +247,69 @@ void hw3_main(void)
                           LCD_COLOR_RED,            // Foreground Color
                           LCD_COLOR_BLACK           // Background Color
                         );
-              
-             game_over = check_game_over(
-                                            SHIP_X_COORD,
-                                            SHIP_Y_COORD,
-                                            space_shipHeightPixels,
-                                            space_shipWidthPixels,
-                                            INVADER_X_COORD,
-                                            INVADER_Y_COORD,
-                                            invaderHeightPixels,
-                                            invaderWidthPixels
-                                        );
           }
+					 
+					 
+    }
+
+
+
+    //   while(!game_over)
+    //   {
+    //       if(ALERT_SPACE_SHIP)
+    //       {
+    //         ALERT_SPACE_SHIP = false;
+            
+    //         lcd_draw_image(
+    //                       SHIP_X_COORD,                       // X Center Point
+    //                       space_shipWidthPixels,   // Image Horizontal Width
+    //                       SHIP_Y_COORD,                       // Y Center Point
+    //                       space_shipHeightPixels,  // Image Vertical Height
+    //                       space_shipBitmaps,       // Image
+    //                       LCD_COLOR_BLUE,           // Foreground Color
+    //                       LCD_COLOR_BLACK          // Background Color
+    //                     );
+
+    //         game_over = check_game_over(
+    //                                     SHIP_X_COORD,
+    //                                     SHIP_Y_COORD,
+    //                                     space_shipHeightPixels,
+    //                                     space_shipWidthPixels,
+    //                                     INVADER_X_COORD,
+    //                                     INVADER_Y_COORD,
+    //                                     invaderHeightPixels,
+    //                                     invaderWidthPixels
+    //                                 );
+    //       }
           
-      }   
+    //       if(ALERT_INVADER)
+    //       {
+    //         ALERT_INVADER = false;
+            
+    //         lcd_draw_image(
+    //                       INVADER_X_COORD,          // X Center Point
+    //                       invaderWidthPixels,       // Image Horizontal Width
+    //                       INVADER_Y_COORD,          // Y Center Point
+    //                       invaderHeightPixels,      // Image Vertical Height
+    //                       invaderBitmaps,           // Image
+    //                       LCD_COLOR_RED,            // Foreground Color
+    //                       LCD_COLOR_BLACK           // Background Color
+    //                     );
+              
+    //          game_over = check_game_over(
+    //                                         SHIP_X_COORD,
+    //                                         SHIP_Y_COORD,
+    //                                         space_shipHeightPixels,
+    //                                         space_shipWidthPixels,
+    //                                         INVADER_X_COORD,
+    //                                         INVADER_Y_COORD,
+    //                                         invaderHeightPixels,
+    //                                         invaderWidthPixels
+    //                                     );
+    //       }
+          
+    //   }   
+
+
+
 }

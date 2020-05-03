@@ -22,3 +22,12 @@
 .\obj\hw3.o: ..\peripherals\include\lcd.h
 .\obj\hw3.o: ..\drivers\include\timers.h
 .\obj\hw3.o: hw3_images.h
+.\obj\hw3.o: main.h
+.\obj\hw3.o: hw3_images.h
+.\obj\hw3.o: hw3_staff.h
+.\obj\hw3.o: hw3_images.h
+.\obj\hw3.o: hw3_interrupts.h
+.\obj\hw3.o: hw3_images.h
+.\obj\hw3.o: ..\peripherals\include\serial_debug.h
+.\obj\hw3.o: ..\drivers\include\pc_buffer.h
+.\obj\hw3.o: ..\drivers\include\uart.h
