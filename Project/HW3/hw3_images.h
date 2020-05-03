@@ -18,8 +18,12 @@ extern const uint8_t spreadbulletBitmaps[];
 extern const uint8_t touchToStartBitmaps[];
 #define touchToStartWidthPixels 79
 #define touchToStartHeightPixels 12
-#endif
-// Bitmap info for invader
 extern const uint8_t invaderBitmaps[];
 extern const uint8_t invaderWidthPixels;
 extern const uint8_t invaderHeightPixels;
+// Bitmap sizes for gameover
+extern const uint8_t gameoverBitmaps[]
+#define gameoverWidthPixels 117
+#define gameoverHeightPixels 23
+
+#endif
