@@ -19,25 +19,7 @@
 // WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-#ifndef __PC_BUFFER_H__
-#define __PC_BUFFER_H__
-
-#include <stdbool.h>
-#include <stdint.h>
-#include <stdlib.h>
-
-//produce_count     volatile unsigned 32-bit integer
-//consume_count     volatile unsigned 32-bit integer       
-//BUFFER_SIZE       unsigned 16-bit integer for number of entries in circular buffer.
-//array             volatile char pointer that holds the address of the circular buffer.
-
-typedef __packed struct {
-	volatile uint32_t produce_count;
-	volatile uint32_t consume_count;
-	uint16_t BUFFER_SIZE;
-	volatile char* 	  array;
-} PC_Buffer ;
+#include "pc_buffer.h"
 
 //*****************************************************************************
 // Initializes a Producer-Consumer circular buffer.  Be sure to allocate 
@@ -47,7 +29,13 @@ typedef __packed struct {
 //    buffer  :   The address of the circular buffer.
 //    size:       Number of entries in the circular buffer.
 //*****************************************************************************
-void pc_buffer_init(PC_Buffer *buffer, uint16_t buffer_size);
+void pc_buffer_init(PC_Buffer *buffer, uint16_t buffer_size)
+{
+	buffer -> consume_count = 0;
+	buffer -> produce_count = 0;
+	buffer -> BUFFER_SIZE = buffer_size;
+	buffer -> array = malloc(sizeof(char*)*buffer_size);
+}
 
 //*****************************************************************************
 // Adds a character to the circular buffer.
@@ -55,8 +43,12 @@ void pc_buffer_init(PC_Buffer *buffer, uint16_t buffer_size);
 // Parameters
 //    buffer  :   The address of the circular buffer.
 //    data    :   Character to add.
-//*******************************************************************************
-void pc_buffer_add(PC_Buffer *buffer, char data);
+//*****************************************************************************
+void pc_buffer_add(PC_Buffer *buffer, char data)
+{
+	(buffer -> array)[(buffer->produce_count)%(buffer->BUFFER_SIZE)] = data;
+	buffer -> produce_count ++ ;
+}
 
 //*****************************************************************************
 // Removes the oldest character from the circular buffer.
@@ -65,7 +57,11 @@ void pc_buffer_add(PC_Buffer *buffer, char data);
 //    buffer  :   The address of the circular buffer.
 //    data    :   Address to place the oldest character.
 //*****************************************************************************
-void pc_buffer_remove(PC_Buffer *buffer, char *data);
+void pc_buffer_remove(PC_Buffer *buffer, char *data)
+{
+	*data = buffer -> array[buffer->consume_count%buffer->BUFFER_SIZE];
+	buffer -> consume_count ++;
+}
 
 //*****************************************************************************
 // Returns true if the circular buffer is empty.  Returns false if it is not.
@@ -73,7 +69,14 @@ void pc_buffer_remove(PC_Buffer *buffer, char *data);
 // Parameters
 //    buffer  :   The address of the circular buffer.
 //*****************************************************************************
-bool pc_buffer_empty(PC_Buffer *buffer);
+bool pc_buffer_empty(PC_Buffer *buffer)
+{
+	if (buffer->produce_count - buffer->consume_count == 0){
+		return true;
+	} else {
+		return false;
+	}
+}
 
 //*****************************************************************************
 // Returns true if the circular buffer is full.  Returns false if it is not.
@@ -81,6 +84,11 @@ bool pc_buffer_empty(PC_Buffer *buffer);
 // Parameters
 //    buffer  :   The address of the circular buffer.
 //*****************************************************************************
-bool pc_buffer_full(PC_Buffer *buffer);
-
-#endif
+bool pc_buffer_full(PC_Buffer *buffer)
+{
+	if (buffer->produce_count-buffer->consume_count==buffer->BUFFER_SIZE){
+		return true;
+	} else {
+		return false;
+	}
+}
