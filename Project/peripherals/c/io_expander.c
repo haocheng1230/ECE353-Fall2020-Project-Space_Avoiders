@@ -1,5 +1,20 @@
 #include "io_expander.h"
 
+void set_io_expander_GPIO(){
+	
+		// Set GPIOA as output and GPIOB as input, enable PUR for GPIOB
+		io_expander_write_reg(MCP23017_IODIRA_R,0x00);
+		io_expander_write_reg(MCP23017_IODIRB_R,0xFF);
+		io_expander_write_reg(MCP23017_GPPUB_R, 0xFF);
+	
+		// Configure MCP23017 interrupt enable
+		io_expander_write_reg(MCP23017_DEFVALB_R, 0xFF);
+		io_expander_write_reg(MCP23017_INTCONB_R, 0x00);	// Interrupt happens when the button is pressed / released
+		io_expander_write_reg(MCP23017_IOCONB_R, 0x00);		// Active-low interrupt
+		io_expander_write_reg(MCP23017_GPINTENB_R, 0x0F);	// Interrupt enabled for GPIOB pins
+	
+}
+
 bool io_expander_init(void)
 {
 
@@ -40,21 +55,6 @@ bool io_expander_init(void)
 		set_io_expander_GPIO();
 
 	return true;
-}
-
-void set_io_expander_GPIO(){
-	
-		// Set GPIOA as output and GPIOB as input, enable PUR for GPIOB
-		io_expander_write_reg(MCP23017_IODIRA_R,0x00);
-		io_expander_write_reg(MCP23017_IODIRB_R,0xFF);
-		io_expander_write_reg(MCP23017_GPPUB_R, 0xFF);
-	
-		// Configure MCP23017 interrupt enable
-		io_expander_write_reg(MCP23017_DEFVALB_R, 0xFF);
-		io_expander_write_reg(MCP23017_INTCONB_R, 0x00);	// Interrupt happens when the button is pressed / released
-		io_expander_write_reg(MCP23017_IOCONB_R, 0x00);		// Active-low interrupt
-		io_expander_write_reg(MCP23017_GPINTENB_R, 0x0F);	// Interrupt enabled for GPIOB pins
-	
 }
 
 void io_expander_write_reg(uint8_t reg, uint8_t data)

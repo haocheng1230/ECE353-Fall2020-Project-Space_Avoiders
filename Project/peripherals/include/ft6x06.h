@@ -6,7 +6,7 @@
 #include "gpio_port.h"
 #include "i2c.h"
 
-#define FT6X06_DEV_D                  0x38
+#define FT6X06_DEV_ID                  0x38
 
 //*****************************************************************************
 // Fill out the #defines below to configure which pins are connected to
@@ -62,59 +62,21 @@
 #define FT6X06_REALEASE_CODE_ID_R     0xAF
 #define FT6X06_STATE_R                0xBC
 
-//*****************************************************************************
-// Sets the address to read/write from in the FT6x06  
-//
-// Paramters
-//    i2c_base:   a valid base address of an I2C peripheral
-//
-//    address:    8-bit address
-//
-// Returns
-// I2C_OK if the byte was written to the EEPROM.
-//*****************************************************************************
-i2c_status_t ft6x06_set_addr
-( 
-  uint32_t  i2c_base,
-  uint8_t  address
-);
 
 //*****************************************************************************
-// Writes one byte of data to the address specified for the FT6x06  
-//
-// Paramters
-//    i2c_base:   a valid base address of an I2C peripheral
-//
-//    address:    8-bit address
-//
-//    data:       data to write.
-//
-// Returns
-// I2C_OK if the byte was written to the EEPROM.
+// Read the X value of last touch event
 //*****************************************************************************
-i2c_status_t ft6x06_write_data
-( 
-  uint32_t  i2c_base,
-  uint8_t  address,
-  uint8_t data
-);
+uint8_t ft6x06_read_td_status(void);
 
 //*****************************************************************************
-// Reads one byte of data from the current address of the FT6x06  
-//
-// Paramters
-//    i2c_base:   a valid base address of an I2C peripheral
-//
-//    data:       data to read.
-//
-// Returns
-// I2C_OK if the byte was written to the EEPROM.
+// Read the X value of last touch event
 //*****************************************************************************
-i2c_status_t ft6x06_read_data
-( 
-  uint32_t  i2c_base,
-  uint8_t *data
-);
+uint16_t ft6x06_read_x(void);
+
+//*****************************************************************************
+// Read the Y value of last touch event
+//*****************************************************************************
+uint16_t ft6x06_read_y(void);
 
 //*****************************************************************************
 // Test the ft6x06

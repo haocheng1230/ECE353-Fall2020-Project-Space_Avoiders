@@ -437,6 +437,16 @@
               <FileType>1</FileType>
               <FilePath>..\drivers\c\uart.c</FilePath>
             </File>
+            <File>
+              <FileName>i2c.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\drivers\c\i2c.c</FilePath>
+            </File>
+            <File>
+              <FileName>spi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\drivers\c\spi.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -456,6 +466,16 @@
               <FileName>serial_debug.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\peripherals\c\serial_debug.c</FilePath>
+            </File>
+            <File>
+              <FileName>io_expander.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\peripherals\c\io_expander.c</FilePath>
+            </File>
+            <File>
+              <FileName>ft6x06.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\peripherals\c\ft6x06.c</FilePath>
             </File>
           </Files>
         </Group>
