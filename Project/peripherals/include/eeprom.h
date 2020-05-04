@@ -6,24 +6,21 @@
 #include "i2c.h"
 #include "gpio_port.h"
 
-
-#define MCP24LC32AT_DEV_ID    0x50 
-#define FIXME 0x00
-
-#define EEPROM_TEST_NUM_BYTES		100
+#define MCP24LC32AT_DEV_ID			0x50
+#define EEPROM_TEST_NUM_BYTES    20
 
 //*****************************************************************************
 // Fill out the #defines below to configure which pins are connected to
 // the I2C Bus
 //*****************************************************************************
-#define   EEPROM_GPIO_BASE         GPIOA_BASE
-#define   EEPROM_I2C_BASE          I2C1_BASE
-#define   EEPROM_I2C_SCL_PIN       PA6
-#define   EEPROM_I2C_SDA_PIN       PA7
-#define 	EEPROM_I2C_SCL_PCTL_M		 GPIO_PCTL_PA6_M
-#define   EEPROM_I2C_SCL_PIN_PCTL  GPIO_PCTL_PA6_I2C1SCL
-#define 	EEPROM_I2C_SDA_PCTL_M		 GPIO_PCTL_PA7_M
-#define   EEPROM_I2C_SDA_PIN_PCTL  GPIO_PCTL_PA7_I2C1SDA
+#define   EEPROM_GPIO_BASE         	GPIOA_BASE
+#define   EEPROM_I2C_BASE          	I2C1_BASE
+#define   EEPROM_I2C_SCL_PIN       	PA6
+#define   EEPROM_I2C_SDA_PIN       	PA7
+#define   EEPROM_I2C_SCL_PCTL_M     GPIO_PCTL_PA6_M
+#define   EEPROM_I2C_SCL_PIN_PCTL 	GPIO_PCTL_PA6_I2C1SCL
+#define   EEPROM_I2C_SDA_PCTL_M     GPIO_PCTL_PA7_M
+#define   EEPROM_I2C_SDA_PIN_PCTL  	GPIO_PCTL_PA7_I2C1SDA
 
 //*****************************************************************************
 // Writes a single byte of data out to the  MCP24LC32AT EEPROM.  
@@ -71,5 +68,6 @@ i2c_status_t eeprom_byte_read
 // Initialize the EEPROM peripheral
 //*****************************************************************************
 bool eeprom_init(void);
+
 
 #endif
