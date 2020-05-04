@@ -15,6 +15,17 @@ static int BULLET_HEIGHT = 12;
 static int LCD_WIDTH = 240;
 static int LCD_HEIGHT = 320;
 
+volatile uint16_t INVINCIBLE_TIMER_COUNT_DOWN = INVINCIBLE_TIME_MAX;
+
+volatile bool blink = true;
+uint8_t button;
+
+volatile uint32_t MARK = 0;
+
+#define bounce_time_delay_defalut 5
+volatile uint8_t bounce_delay = 0;
+volatile bool bounce = false;
+
 void spawn_bullet (volatile bullet* ptr){
 	//int upper = 20;
 	//int lower = 220;
@@ -78,6 +89,37 @@ PS2_DIR_t ps2_get_direction(void)
         return PS2_DIR_CENTER;
     }
 }
+
+
+
+void GPIOF_Handler(){
+	uint8_t i;
+	
+	io_expander_read_reg(MCP23017_GPIOB_R, &button);
+	if (ULT) {	
+		ULT = false;
+		for (i = 0; i < BULLET_NUM; i++){
+		bullets[i].draw = false;
+	}
+	lcd_clear_screen(LCD_COLOR_BLACK);
+	}
+	GPIOF->ICR |= GPIO_ICR_GPIO_M;
+}
+
+
+// flash hitpoint, as well as reset debounce;
+// very slow
+void TIMER1A_Handler(void)
+{
+	blink = !blink;
+	if (!blink) {
+		io_expander_write_reg(MCP23017_GPIOA_R, 0x00);
+	} else {
+		io_expander_write_reg(MCP23017_GPIOA_R, HIT_POINT);
+	}
+	TIMER1->ICR |= TIMER_ICR_TATOCINT;
+}
+
 
 
 //*****************************************************************************
@@ -166,6 +208,7 @@ void TIMER3A_Handler(void)
 //*****************************************************************************
 // TIMER4 ISR is used to trigger the ADC
 // Trigger every 1ms, priority 2
+// also calculates invincible time 
 //*****************************************************************************
 void TIMER4A_Handler(void)
 {
@@ -184,10 +227,20 @@ void ADC0SS2_Handler(void)
     PS2_X_DATA = ADC0->SSFIFO2;
     PS2_Y_DATA = ADC0->SSFIFO2; // read x then y from FIFO
     PS2_DIR = ps2_get_direction();
+	
+		if (INVINCIBLE) {
+			INVINCIBLE_TIMER_COUNT_DOWN -= 1;
+		} 
+		if (INVINCIBLE_TIMER_COUNT_DOWN == 0){
+			INVINCIBLE = false;
+			INVINCIBLE_TIMER_COUNT_DOWN = INVINCIBLE_TIME_MAX;
+		}
+	
     // Clear the interrupt
     ADC0->ISC |= ADC_ISC_IN2;
 }
 
+// update invader position, also update mark;
 void TIMER5A_Handler(void)
 {
     
@@ -223,6 +276,8 @@ void TIMER5A_Handler(void)
 
      //decrement move count
      MOVE_COUNT --;
+		 
+		 MARK ++;
 	// Clear the interrupt
 	TIMER5->ICR |= TIMER_ICR_TATOCINT; 
 }

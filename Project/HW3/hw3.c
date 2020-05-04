@@ -15,6 +15,10 @@ extern volatile bullet bullets[BULLET_NUM];
 volatile bool ALERT_BULLET = true;
 volatile bool ALERT_FIGHTER = true;
 volatile bool ALERT_INVADER = true;
+
+volatile uint8_t HIT_POINT = 0xFF;
+volatile bool INVINCIBLE = false;
+volatile bool ULT = false;
 //*****************************************************************************
 // Determines if any part of the image would be off the screen if the image
 // is moved in the specified direction.
@@ -142,11 +146,13 @@ void init_hardware(void)
   lcd_config_screen();
   lcd_clear_screen(LCD_COLOR_BLACK);
   ps2_initialize();
-  
+  io_expander_init();
+	
   // Update the Space Shipt 60 times per second.
+	gp_timer_config_32(TIMER1_BASE,TIMER_TAMR_TAMR_PERIOD, 50000000, false, true);
   gp_timer_config_32(TIMER2_BASE,TIMER_TAMR_TAMR_PERIOD, 610000, false, true);
   gp_timer_config_32(TIMER3_BASE,TIMER_TAMR_TAMR_PERIOD, 770000, false, true);
-  gp_timer_config_32(TIMER4_BASE,TIMER_TAMR_TAMR_PERIOD, 53000, false, true);
+  gp_timer_config_32(TIMER4_BASE,TIMER_TAMR_TAMR_PERIOD, 50000, false, true);
 	gp_timer_config_32(TIMER5_BASE,TIMER_TAMR_TAMR_PERIOD, 1400000, false, true);
 }
 
@@ -183,16 +189,17 @@ void hw3_main(void)
 			//put_string(temp);
 			if ( x >= 1 && x <= LCD_X_MAX && y <= LCD_Y_MAX && y >= 1) {
 				game_start = true;
+				io_expander_write_reg(MCP23017_GPIOA_R, HIT_POINT);
 				lcd_clear_screen(LCD_COLOR_BLACK);
 			}
 		
 		} // wait until touch the screen to start game
 		
+		ULT = true;
+		
     while(!game_over) {
 			  int width = 0;
-			
-			
-			
+				
 				if (ALERT_BULLET) {
 					ALERT_BULLET = false;
 					//put_string("a");
@@ -213,15 +220,20 @@ void hw3_main(void)
 									  LCD_COLOR_BLACK
                 );
             }
-						
-            game_over = check_game_over(FIGHTER_X_COORD,FIGHTER_Y_COORD,fighterHeightPixel,fighterWidthPixel,
-            bullets[i].x,bullets[i].y,width,12);
-						if(game_over) {
-							break;
+
+				if (check_game_over(FIGHTER_X_COORD,FIGHTER_Y_COORD,fighterHeightPixel,fighterWidthPixel,
+            bullets[i].x,bullets[i].y,width,12)) { // if we hit a bullet
+							if (!INVINCIBLE) {
+								INVINCIBLE = 1;
+								HIT_POINT  = HIT_POINT >> 1;
+								ULT = true;
+							}
 						}
         }
 				}
-				
+			if (HIT_POINT == 0){
+				game_over = true;
+			}
 		
 	if(game_over) {
 							break;
