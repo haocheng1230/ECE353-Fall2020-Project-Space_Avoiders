@@ -241,15 +241,16 @@ void hw3_main(void)
 						}
         }
 				}
+				// game over if play lost all HP
 			if (HIT_POINT == 0){
 				game_over = true;
 			}
-		
+		//step to infinate loop
 	if(game_over) {
 							break;
 		}		
 				
-				
+		// check if the player have collide with the invader		
 	 game_over = check_game_over(
                                         FIGHTER_X_COORD,
                                         FIGHTER_Y_COORD,
@@ -260,11 +261,11 @@ void hw3_main(void)
                                         invaderHeightPixels,
                                         invaderWidthPixels
                                     );		
-				
+				//step to infinate loop
 				if(game_over) {
 							break;
 		}		
-				
+				// update fighter's position and draw on LCD  screen
 			if(ALERT_FIGHTER)
            {
              ALERT_FIGHTER = false;
@@ -281,7 +282,7 @@ void hw3_main(void)
               
            }
 				
-				
+					// update invader's position and draw on LCD  screen
 					 
 				 if(ALERT_INVADER)
           {
@@ -299,7 +300,9 @@ void hw3_main(void)
           }
 					 
 					 
-    } // game over
+    } 
+		
+		// game over
 		
 		lcd_clear_screen(LCD_COLOR_BLACK);
 		if (CURRENT_SCORE > highscore) eeprom_score_write(CURRENT_SCORE);
@@ -307,8 +310,6 @@ void hw3_main(void)
 		draw_string("GAME SCORE", 30,80, LCD_COLOR_BLUE);
 		draw_string(temp, 40, 120, LCD_COLOR_YELLOW);
 		draw_string("GAME OVER", 40, 160, LCD_COLOR_RED);
-		
-
 
 
 }

@@ -107,6 +107,11 @@ void GPIOF_Handler(){
 	uint8_t i;
 	
 	io_expander_read_reg(MCP23017_GPIOB_R, &button);
+	
+	// the if statement below is the actual debounce step
+	// the debouce is reset whenever the paly gets hit
+	// and the player gets invincible for 1 second after getting hit
+	// so the debouce time delay is 1 second at least
 	if (ULT) {	
 		ULT = false;
 		for (i = 0; i < BULLET_NUM; i++){
