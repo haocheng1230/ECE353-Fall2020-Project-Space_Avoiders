@@ -1648,8 +1648,9 @@ const uint8_t hyliaSerifBeta_18ptBitmaps[] =
 	0x00, 0x00, 0x00, 0x00, //                          
 };
 
-
-// x, y for the first char 
+// target: The string to be displayed on the screen
+// x, y : for the location of the first char 
+// color : the color of the text to be displayed
 void draw_string(char* target, int x, int y, uint16_t color) {
     // 0 index 0
     // A index 17

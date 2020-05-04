@@ -407,6 +407,16 @@
               <FileType>1</FileType>
               <FilePath>.\hw3_images.c</FilePath>
             </File>
+            <File>
+              <FileName>display.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\display.c</FilePath>
+            </File>
+            <File>
+              <FileName>scoreboard.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\scoreboard.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -476,6 +486,11 @@
               <FileName>ft6x06.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\peripherals\c\ft6x06.c</FilePath>
+            </File>
+            <File>
+              <FileName>eeprom.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\peripherals\c\eeprom.c</FilePath>
             </File>
           </Files>
         </Group>

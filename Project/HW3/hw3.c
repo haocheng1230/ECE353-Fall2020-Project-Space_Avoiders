@@ -169,7 +169,6 @@ void hw3_main(void)
 		
 		highscore = eeprom_score_read();
 		sprintf(temp, "%X", highscore);
-		printf("%x %s",highscore,temp);
 		draw_string("HIGH SCORE", 30,80, LCD_COLOR_BLUE);
 		draw_string(temp, 40, 120, LCD_COLOR_RED);
 	
