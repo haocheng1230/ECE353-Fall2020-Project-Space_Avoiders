@@ -3,6 +3,7 @@
 #define ADDR_START    256
 #define NUM_BYTES      20
 
+// This will write a 32-bit score to the EEPROM
 void eeprom_score_write(uint32_t highscore) {
     i2c_status_t status;
     uint16_t addr = 256;
@@ -17,6 +18,7 @@ void eeprom_score_write(uint32_t highscore) {
     }
 }
 
+// This will read a 32-bit score from the EEPROM
 uint32_t eeprom_score_read() {
     i2c_status_t status;
     uint32_t highscore;
@@ -30,6 +32,7 @@ uint32_t eeprom_score_read() {
     return highscore;
 }
 
+// This function is mainly development use. It resets the eeprom memory used;
 void eeprom_score_reset() {
     i2c_status_t status;
 		int i;
