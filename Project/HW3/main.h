@@ -35,8 +35,10 @@
 #include "timers.h"
 #include "hw3_images.h"
 #include "hw3_staff.h"
+#include "ft6x06.h"
 #include "hw3.h"
 #include "hw3_interrupts.h"
+#include "io_expander.h"
 
 #include "driver_defines.h"
 #include "serial_debug.h"

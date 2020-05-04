@@ -52,6 +52,7 @@ void initializeBoard(void)
   
   DisableInterrupts();
   init_serial_debug(true, true);
+	ft6x06_init();
   EnableInterrupts();
 }
 
@@ -62,15 +63,22 @@ void initializeBoard(void)
 int 
 main(void)
 {
+	DisableInterrupts();
+	initialize_serial_debug();
+	// put_string("first");
+	ft6x06_init();
+	// io_expander_init();
+  EnableInterrupts();
    
-  initialize_serial_debug();
-    
   put_string("\n\r******************************\n\r");
   put_string("ECE353 HW3 Spring 2020\n\r");
   put_string(STUDENT_NAME);
   put_string("\n\r");
   put_string("******************************\n\r");    
-
+	// DisableInterrupts();
+	// ft6x06_init();
+	// //io_expander_init();
+  // EnableInterrupts();
   hw3_main();
                     
   // Reach infinite loop after the game is over.

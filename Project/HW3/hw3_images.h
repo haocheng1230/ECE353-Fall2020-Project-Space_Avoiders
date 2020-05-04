@@ -22,7 +22,7 @@ extern const uint8_t invaderBitmaps[];
 extern const uint8_t invaderWidthPixels;
 extern const uint8_t invaderHeightPixels;
 // Bitmap sizes for gameover
-extern const uint8_t gameoverBitmaps[]
+extern const uint8_t gameoverBitmaps[];
 #define gameoverWidthPixels 117
 #define gameoverHeightPixels 23
 

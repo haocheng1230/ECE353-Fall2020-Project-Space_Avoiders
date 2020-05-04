@@ -16,8 +16,8 @@ static int LCD_WIDTH = 240;
 static int LCD_HEIGHT = 320;
 
 void spawn_bullet (volatile bullet* ptr){
-	int upper = 20;
-	int lower = 220;
+	//int upper = 20;
+	//int lower = 220;
 	
 	int bitMapResult = rand()%10;
 	int directionResultX = rand()%3;
