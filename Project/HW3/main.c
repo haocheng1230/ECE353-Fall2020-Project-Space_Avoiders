@@ -19,7 +19,6 @@
 // WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 #include "main.h"
 /******************************************************************************
  * Global Variables
@@ -65,20 +64,15 @@ main(void)
 {
 	DisableInterrupts();
 	initialize_serial_debug();
-	// put_string("first");
 	ft6x06_init();
-	// io_expander_init();
   EnableInterrupts();
-   
   put_string("\n\r******************************\n\r");
   put_string("ECE353 HW3 Spring 2020\n\r");
   put_string(STUDENT_NAME);
   put_string("\n\r");
   put_string("******************************\n\r");    
-	// DisableInterrupts();
-	// ft6x06_init();
-	// //io_expander_init();
-  // EnableInterrupts();
+
+	// draw_string("123", 120, 120, LCD_COLOR_BLUE);
   hw3_main();
                     
   // Reach infinite loop after the game is over.

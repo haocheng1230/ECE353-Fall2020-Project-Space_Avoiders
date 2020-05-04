@@ -14,6 +14,7 @@
 #include "hw3.h"
 #include "hw3_images.h"
 #include "hw3_staff.h"
+#include "scoreboard.h"
 
 
 #endif

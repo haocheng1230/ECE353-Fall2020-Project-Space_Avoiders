@@ -13,6 +13,8 @@
 #include "timers.h"
 #include "hw3_images.h"
 #include "io_expander.h"
+#include "display.h"
+#include "scoreboard.h"
 
 extern volatile uint16_t INVADER_X_COORD;
 extern volatile uint16_t INVADER_Y_COORD;
@@ -22,6 +24,7 @@ extern volatile bool ALERT_INVADER;
 extern volatile bool ALERT_FIGHTER;
 extern volatile bool ALERT_BULLET;
 extern char STUDENT_NAME[];
+extern volatile uint32_t CURRENT_SCORE; 
 
 extern volatile uint8_t HIT_POINT;
 extern volatile bool INVINCIBLE;

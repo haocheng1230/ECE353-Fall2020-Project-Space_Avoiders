@@ -118,6 +118,7 @@ void TIMER1A_Handler(void)
 		io_expander_write_reg(MCP23017_GPIOA_R, HIT_POINT);
 	}
 	TIMER1->ICR |= TIMER_ICR_TATOCINT;
+	CURRENT_SCORE += 1;
 }
 
 

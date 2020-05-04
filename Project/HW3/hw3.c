@@ -6,7 +6,7 @@
 bool game_start = false;
 volatile uint16_t FIGHTER_X_COORD = 190;
 volatile uint16_t FIGHTER_Y_COORD = 270;
-
+volatile uint32_t CURRENT_SCORE = 0;
 volatile uint16_t INVADER_X_COORD = 50;
 volatile uint16_t INVADER_Y_COORD = 40;
 
@@ -163,8 +163,16 @@ void hw3_main(void)
 {
     bool game_over = false;
     int i = 0;
+		uint32_t highscore;
+		char temp[100];
     init_hardware();
-
+		
+		highscore = eeprom_score_read();
+		sprintf(temp, "%X", highscore);
+		printf("%x %s",highscore,temp);
+		draw_string("HIGH SCORE", 30,80, LCD_COLOR_BLUE);
+		draw_string(temp, 40, 120, LCD_COLOR_RED);
+	
 		
     while(!game_start){
 			uint16_t x;
@@ -191,6 +199,7 @@ void hw3_main(void)
 				game_start = true;
 				io_expander_write_reg(MCP23017_GPIOA_R, HIT_POINT);
 				lcd_clear_screen(LCD_COLOR_BLACK);
+				CURRENT_SCORE = 0;
 			}
 		
 		} // wait until touch the screen to start game
@@ -289,7 +298,15 @@ void hw3_main(void)
           }
 					 
 					 
-    }
+    } // game over
+		
+		lcd_clear_screen(LCD_COLOR_BLACK);
+		if (CURRENT_SCORE > highscore) eeprom_score_write(CURRENT_SCORE);
+		sprintf(temp, "%X", CURRENT_SCORE);
+		draw_string("GAME SCORE", 30,80, LCD_COLOR_BLUE);
+		draw_string(temp, 40, 120, LCD_COLOR_YELLOW);
+		draw_string("GAME OVER", 40, 160, LCD_COLOR_RED);
+		
 
 
 
