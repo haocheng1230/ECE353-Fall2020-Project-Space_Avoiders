@@ -15,17 +15,25 @@ static int BULLET_HEIGHT = 12;
 static int LCD_WIDTH = 240;
 static int LCD_HEIGHT = 320;
 
+// count down timer for each time the fighter get hit and enter invincible time
 volatile uint16_t INVINCIBLE_TIMER_COUNT_DOWN = INVINCIBLE_TIME_MAX;
 
+// state reg of led blinking
 volatile bool blink = true;
+
+// reg holding the value from io expander button
 uint8_t button;
 
+// player mark
 volatile uint32_t MARK = 0;
 
+// debounce time counter
 #define bounce_time_delay_defalut 5
 volatile uint8_t bounce_delay = 0;
 volatile bool bounce = false;
 
+
+// function to spawn a random bullet, and place it in the bullet array
 void spawn_bullet (volatile bullet* ptr){
 	//int upper = 20;
 	//int lower = 220;
@@ -42,28 +50,28 @@ void spawn_bullet (volatile bullet* ptr){
 								(bitMapResult < 9) ? LCD_COLOR_GREEN :
 								LCD_COLOR_RED;
 	
-	ptr->x =			(ptr->map == bulletBitmaps) ? (rand()%200 + 20) : 
-								INVADER_X_COORD;
+	ptr->x =			(ptr->map == bulletBitmaps) ? (rand()%200 + 20) : 	//spawn blue meteorite randomlly
+								INVADER_X_COORD;																		//spawn bullet at invador's position
 	
-	ptr->y = 			(ptr->map == bulletBitmaps) ? BULLET_HEIGHT : 
+	ptr->y = 			(ptr->map == bulletBitmaps) ? BULLET_HEIGHT : 			// choose bullet's bitmap
 								INVADER_Y_COORD;
 	
 	ptr->xSpeed =		(ptr->map == bulletBitmaps) ? 0 :
-									(directionResultX == 0) ? -1 :
+									(directionResultX == 0) ? -1 :			// random direction
 									(directionResultX == 1) ? 0 :
 									1;
 	
-	ptr->ySpeed =	(ptr->map == bulletBitmaps) ? 1 :
+	ptr->ySpeed =	(ptr->map == bulletBitmaps) ? 1 :			// radom direction
 								(directionResultY == 0) ? -1 :
 								(directionResultY == 1) ? 0 :
 								1;
 								
-	if (ptr->xSpeed == 0 && ptr->ySpeed == 0){
-		ptr->draw = false;
+	if (ptr->xSpeed == 0 && ptr->ySpeed == 0){		// small chance of spawning still bullet,
+		ptr->draw = false; // delete it
 	} else {
-		ptr->draw = true;
+		ptr->draw = true; // make bulet valid
 	}
-	//srand(0);
+
 }
 
 //*****************************************************************************
@@ -90,7 +98,10 @@ PS2_DIR_t ps2_get_direction(void)
     }
 }
 
-
+/*
+the IO expander ISR
+clear all bullets and refresh the screen
+*/
 
 void GPIOF_Handler(){
 	uint8_t i;
@@ -107,18 +118,17 @@ void GPIOF_Handler(){
 }
 
 
-// flash hitpoint, as well as reset debounce;
-// very slow
+// blink hitpoint LED, as well as reset debounce;
+// very slow timer, in order of seconds
 void TIMER1A_Handler(void)
 {
 	blink = !blink;
 	if (!blink) {
-		io_expander_write_reg(MCP23017_GPIOA_R, 0x00);
+		io_expander_write_reg(MCP23017_GPIOA_R, 0x00); 			// led off
 	} else {
-		io_expander_write_reg(MCP23017_GPIOA_R, HIT_POINT);
+		io_expander_write_reg(MCP23017_GPIOA_R, HIT_POINT);	// led based on HP
 	}
 	TIMER1->ICR |= TIMER_ICR_TATOCINT;
-	CURRENT_SCORE += 1;
 }
 
 
@@ -140,7 +150,7 @@ void TIMER1A_Handler(void)
 void TIMER2A_Handler(void)
 {
 	
-    // move invader if not contacting edge
+    // move fighter if not contacting edge
     if (!contact_edge(PS2_DIR,
             FIGHTER_X_COORD,
             FIGHTER_Y_COORD,
@@ -150,7 +160,7 @@ void TIMER2A_Handler(void)
         ALERT_FIGHTER = true;
     }
 
-    // if the invader can be moved, then update its coord
+    // if the fighter can be moved, then update its coord
     if (ALERT_FIGHTER) {
             move_image(
                     PS2_DIR,
@@ -161,6 +171,7 @@ void TIMER2A_Handler(void)
                     );
     }
     // Clear the interrupt
+	CURRENT_SCORE += 1; // fighter survived one more clock tick !!!
 	TIMER2->ICR |= TIMER_ICR_TATOCINT;
 }
 
@@ -175,7 +186,7 @@ void TIMER3A_Handler(void)
 {	
 	volatile int i;
 
-	if (!ALERT_BULLET) {
+	if (!ALERT_BULLET) { // if bullet have been moved
 		// clear the bullet in the button of the screen
 		for (i = 0; i < BULLET_NUM; i++){
 			if (bullets[i].color == LCD_COLOR_BLACK) {
@@ -190,6 +201,7 @@ void TIMER3A_Handler(void)
 			} 
 		}
 		
+		// randomlly generate bullets
 		for (i = 0; i < BULLET_NUM; i++){
 		if (bullets[i].draw == false){
 		spawn_bullet(&bullets[i]);
@@ -200,11 +212,11 @@ void TIMER3A_Handler(void)
 	}
 		ALERT_BULLET = true;
 	}
-
 	
 	// Clear the interrupt
 	TIMER3->ICR |= TIMER_ICR_TATOCINT;  
 }
+
 
 //*****************************************************************************
 // TIMER4 ISR is used to trigger the ADC
@@ -218,6 +230,7 @@ void TIMER4A_Handler(void)
 	// Clear the interrupt
 	TIMER4->ICR |= TIMER_ICR_TATOCINT; 
 }
+
 
 //*****************************************************************************
 // ADC0 SS2 ISR
@@ -241,7 +254,8 @@ void ADC0SS2_Handler(void)
     ADC0->ISC |= ADC_ISC_IN2;
 }
 
-// update invader position, also update mark;
+
+// update invader position
 void TIMER5A_Handler(void)
 {
     

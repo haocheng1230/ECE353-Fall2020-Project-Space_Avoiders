@@ -173,7 +173,7 @@ void hw3_main(void)
 		draw_string("HIGH SCORE", 30,80, LCD_COLOR_BLUE);
 		draw_string(temp, 40, 120, LCD_COLOR_RED);
 	
-		
+		// pull the LCD for game start signal
     while(!game_start){
 			uint16_t x;
 			uint16_t y;
@@ -189,14 +189,13 @@ void hw3_main(void)
 			);
 			x = ft6x06_read_x();
 			y = ft6x06_read_y();
-			//sprintf(temp, "%i", x);
-			//strcat(temp, " -- x");
-			//put_string(temp);
-			//sprintf(temp, "%i", y);
-			//strcat(temp, " -- y");
-			//put_string(temp);
+
+			
 			if ( x >= 1 && x <= LCD_X_MAX && y <= LCD_Y_MAX && y >= 1) {
+				// LCD touched
 				game_start = true;
+
+				// display hitpoint LED
 				io_expander_write_reg(MCP23017_GPIOA_R, HIT_POINT);
 				lcd_clear_screen(LCD_COLOR_BLACK);
 				CURRENT_SCORE = 0;
@@ -204,14 +203,16 @@ void hw3_main(void)
 		
 		} // wait until touch the screen to start game
 		
+		// player can perform ULT at start
 		ULT = true;
 		
     while(!game_over) {
 			  int width = 0;
 				
-				if (ALERT_BULLET) {
+				if (ALERT_BULLET) { // if we can move bullet
 					ALERT_BULLET = false;
-					//put_string("a");
+					
+					// refersh bullet position
 		for (i = 0 ; i < BULLET_NUM ; i++) {
             if (bullets[i].draw == true) {
                 if (bullets[i].map == bulletBitmaps) {
@@ -229,7 +230,8 @@ void hw3_main(void)
 									  LCD_COLOR_BLACK
                 );
             }
-
+				
+				//check if the bullet has hit the fighter
 				if (check_game_over(FIGHTER_X_COORD,FIGHTER_Y_COORD,fighterHeightPixel,fighterWidthPixel,
             bullets[i].x,bullets[i].y,width,12)) { // if we hit a bullet
 							if (!INVINCIBLE) {
