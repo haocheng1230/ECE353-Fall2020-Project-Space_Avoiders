@@ -12,6 +12,7 @@
 #include "lcd.h"
 #include "timers.h"
 #include "hw3_images.h"
+#include "io_expander.h"
 
 extern volatile uint16_t INVADER_X_COORD;
 extern volatile uint16_t INVADER_Y_COORD;
@@ -22,8 +23,16 @@ extern volatile bool ALERT_FIGHTER;
 extern volatile bool ALERT_BULLET;
 extern char STUDENT_NAME[];
 
+extern volatile uint8_t HIT_POINT;
+extern volatile bool INVINCIBLE;
+extern volatile uint16_t INVINCIBLE_TIMER_COUNT_DOWN;
+extern volatile bool ULT;
+
+extern volatile uint32_t MARK;
 
 
+
+#define INVINCIBLE_TIME_MAX 1000;
 #define BULLET_NUM 8
 
 typedef enum{
